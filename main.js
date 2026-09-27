@@ -4,63 +4,63 @@
 // available for each genre and atmosphere.
 
 
-// Genre sounds
 let fantasySounds = [
-    "./assets/audio/genre/fantasy1.wav",
-    "./assets/audio/genre/fantasy2.wav",
-    "./assets/audio/genre/fantasy3.wav",
-    "./assets/audio/genre/fantasy4.wav"
+    "assets/audio/genre/fantasy1.mp3",
+    "assets/audio/genre/fantasy2.mp3",
+    "assets/audio/genre/fantasy3.mp3",
+    "assets/audio/genre/fantasy4.mp3"
 ];
 
 let mysterySounds = [
-    "./assets/audio/genre/mystery1.wav",
-    "./assets/audio/genre/mystery2.wav",
-    "./assets/audio/genre/mystery3.wav",
-    "./assets/audio/genre/mystery4.wav"
+    "assets/audio/genre/mystery1.mp3",
+    "assets/audio/genre/mystery2.mp3",
+    "assets/audio/genre/mystery3.mp3",
+    "assets/audio/genre/mystery4.mp3"
 ];
 
 let romanceSounds = [
-    "./assets/audio/genre/romance1.wav",
-    "./assets/audio/genre/romance2.wav",
-    "./assets/audio/genre/romance3.wav",
-    "./assets/audio/genre/romance4.wav"
+    "assets/audio/genre/romance1.mp3",
+    "assets/audio/genre/romance2.mp3",
+    "assets/audio/genre/romance3.mp3",
+    "assets/audio/genre/romance4.mp3"
 ];
 
 let sciFiSounds = [
-    "./assets/audio/genre/sci-fi1.wav",
-    "./assets/audio/genre/sci-fi2.wav",
-    "./assets/audio/genre/sci-fi3.wav",
-    "./assets/audio/genre/sci-fi4.wav"
+    "assets/audio/genre/sci-fi1.mp3",
+    "assets/audio/genre/sci-fi2.mp3",
+    "assets/audio/genre/sci-fi3.mp3",
+    "assets/audio/genre/sci-fi4.mp3"
 ];
 
-// Atmosphere sounds
+
 let calmSounds = [
-    "./assets/audio/atmosphere/calm1.wav",
-    "./assets/audio/atmosphere/calm2.wav",
-    "./assets/audio/atmosphere/calm3.wav",
-    "./assets/audio/atmosphere/calm4.wav"
+    "assets/audio/atmosphere/calm1.mp3",
+    "assets/audio/atmosphere/calm2.mp3",
+    "assets/audio/atmosphere/calm3.mp3",
+    "assets/audio/atmosphere/calm4.mp3"
 ];
 
 let darkSounds = [
-    "./assets/audio/atmosphere/dark1.wav",
-    "./assets/audio/atmosphere/dark2.wav",
-    "./assets/audio/atmosphere/dark3.wav",
-    "./assets/audio/atmosphere/dark4.wav"
+    "assets/audio/atmosphere/dark1.mp3",
+    "assets/audio/atmosphere/dark2.mp3",
+    "assets/audio/atmosphere/dark3.mp3",
+    "assets/audio/atmosphere/dark4.mp3"
 ];
 
 let magicalSounds = [
-    "./assets/audio/atmosphere/magical1.wav",
-    "./assets/audio/atmosphere/magical2.wav",
-    "./assets/audio/atmosphere/magical3.wav",
-    "./assets/audio/atmosphere/magical4.wav"
+    "assets/audio/atmosphere/magical1.mp3",
+    "assets/audio/atmosphere/magical2.mp3",
+    "assets/audio/atmosphere/magical3.mp3",
+    "assets/audio/atmosphere/magical4.mp3"
 ];
 
 let nostalgicSounds = [
-    "./assets/audio/atmosphere/nostalgic1.wav",
-    "./assets/audio/atmosphere/nostalgic2.wav",
-    "./assets/audio/atmosphere/nostalgic3.wav",
-    "./assets/audio/atmosphere/nostalgic4.wav"
+    "assets/audio/atmosphere/nostalgic1.mp3",
+    "assets/audio/atmosphere/nostalgic2.mp3",
+    "assets/audio/atmosphere/nostalgic3.mp3",
+    "assets/audio/atmosphere/nostalgic4.mp3"
 ];
+
 
 ///////////// Selected Sounds
 
@@ -94,17 +94,6 @@ const atmosphereAudio =
 //default volume
 genreAudio.volume = 0.5;
 atmosphereAudio.volume = 0.5;
-
-///////////// Now Playing
-// Find the text elements used to show the current soundtrack information
-const playingGenre =
-document.getElementById("playing-genre");
-
-const playingAtmosphere =
-document.getElementById("playing-atmosphere");
-
-const playingIntensity =
-document.getElementById("playing-intensity");
 
 ///////////// Genre Sound Buttons
 const fantasySound1 =
@@ -477,18 +466,21 @@ intensityRange.addEventListener("input", function(e){
 ///////////// Soundtrack Control Buttons
 // Find the Start, Pause and Reset buttons and the status message
 
-const startButton =
-    document.getElementById("start-button");
+const playPauseButton =
+    document.getElementById("play-pause-button");
 
-const pauseButton =
-    document.getElementById("pause-button");
+const playPauseIcon =
+    document.getElementById("play-pause-icon");
+
+const repeatButton =
+    document.getElementById("repeat-button");
 
 const resetButton =
     document.getElementById("reset-button");
 
-const statusText =
-    document.getElementById("status");
-
+let isPlaying = false;
+let hasStarted = false;
+let isRepeat = false;
 
 //////////// Start Soundtrack
 // Start the selected genre and atmosphere sounds together
@@ -519,32 +511,64 @@ function startSoundtrack(){
     // play both audio layers together
     genreAudio.play();
     atmosphereAudio.play();
-
-    // update Now Playing
-
-    playingGenre.textContent =
-        selectedGenreName;
-
-    playingAtmosphere.textContent =
-        selectedAtmosphereName;
-
-    playingIntensity.textContent =
-        intensityRange.value + "%";
-
-
-    statusText.textContent =
-        "Soundtrack playing.";
 }
 
-///////////// Pause Soundtrack
+///////////// Play / Pause
 
-function pauseSoundtrack(){
-    genreAudio.pause();
-    atmosphereAudio.pause();
-    statusText.textContent =
-        "Soundtrack paused.";
+function togglePlayPause(){
+
+    if(isPlaying === false){
+
+        if(hasStarted === false){
+            startSoundtrack();
+            hasStarted = true;
+        }
+        else {
+            genreAudio.play();
+            atmosphereAudio.play();
+        }
+
+        playPauseIcon.src =
+            "assets/icons/pause.png";
+
+        playPauseButton.setAttribute(
+            "aria-label",
+            "Pause"
+        );
+
+        isPlaying = true;
+
+    } else {
+
+        genreAudio.pause();
+        atmosphereAudio.pause();
+
+        playPauseIcon.src =
+            "assets/icons/play.png";
+
+        playPauseButton.setAttribute(
+            "aria-label",
+            "Play"
+        );
+
+        isPlaying = false;
+    }
 }
 
+///////////// Repeat
+
+function toggleRepeat(){
+
+    isRepeat = !isRepeat;
+
+    genreAudio.loop = isRepeat;
+    atmosphereAudio.loop = isRepeat;
+
+    repeatButton.setAttribute(
+        "aria-pressed",
+        isRepeat
+    );
+}
 function selectGenreSound(sound, name){
     selectedGenreSound = sound;
     selectedGenreName = name;
@@ -573,15 +597,10 @@ function playGenreSound(){
 
     // play selected genre sound
     genreAudio.play();
-
-    // update Now Playing
-    playingGenre.textContent =
-        selectedGenreName;
 }
+
 let selectedGenreButton = null;
-
 let selectedAtmosphereButton = null;
-
 
 ///////////// Play Atmosphere Sound
 
@@ -598,9 +617,6 @@ function playAtmosphereSound(){
 
     // play selected atmosphere sound
     atmosphereAudio.play();
-
-    // update Now Playing
-    playingAtmosphere.textContent = selectedAtmosphereName;
 }
 
 ///////////// Reset
@@ -619,12 +635,18 @@ atmosphereAudio.currentTime = 0;
 genreAudio.src ="";
 atmosphereAudio.src = "";
 
-// remove selected sounds
+// return to default sounds
+selectedGenreSound =
+    fantasySounds[0];
 
-selectedGenreSound = "";
-selectedAtmosphereSound = "";
-selectedGenreName = "";
-selectedAtmosphereName = "";
+selectedAtmosphereSound =
+    calmSounds[0];
+
+selectedGenreName =
+    "Piano & Strings";
+
+selectedAtmosphereName =
+    "Rain";
 
 // reset intensity
 intensityRange.value = 50;
@@ -639,22 +661,40 @@ playingGenre.textContent ="—";
 playingAtmosphere.textContent ="—";
 playingIntensity.textContent ="—";
 
-// reset status
-statusText.textContent =
-    "Choose one genre sound and one atmosphere sound.";
+// reset Play / Pause
+isPlaying = false;
+hasStarted = false;
+
+playPauseIcon.src =
+    "assets/icons/play.png";
+
+playPauseButton.setAttribute(
+    "aria-label",
+    "Play"
+);
+
+// reset Repeat
+isRepeat = false;
+
+genreAudio.loop = false;
+atmosphereAudio.loop = false;
+
+repeatButton.setAttribute(
+    "aria-pressed",
+    "false"
+);
 }
 
 ///////////// Button Event Listeners
-startButton.addEventListener(
+playPauseButton.addEventListener(
     "click",
-    startSoundtrack
+    togglePlayPause
 );
 
-pauseButton.addEventListener(
+repeatButton.addEventListener(
     "click",
-    pauseSoundtrack
+    toggleRepeat
 );
-
 
 resetButton.addEventListener(
     "click",
